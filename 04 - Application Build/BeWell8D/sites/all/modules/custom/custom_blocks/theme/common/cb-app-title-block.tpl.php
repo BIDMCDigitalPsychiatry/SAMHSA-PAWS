@@ -1,0 +1,1 @@
+<h1 class="h1 p-btm app-title"><?php print $app_title; ?></h1>

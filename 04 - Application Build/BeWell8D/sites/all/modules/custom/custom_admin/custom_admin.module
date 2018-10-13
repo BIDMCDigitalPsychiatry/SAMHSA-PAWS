@@ -1,0 +1,84 @@
+<?php
+/**
+ * Require THe functions for each portion of the system
+ */
+include 'inc/overall/functions.php';
+include 'inc/mobile_app/functions.php';
+include 'inc/web_view/functions.php';
+
+/**
+ * Implements hook_menu()
+ *
+ * Sets up the RTT System Admin menu structure
+ */
+function custom_admin_menu() {
+  $items = array();
+
+  //Overall Admin Pages
+  custom_admin_overall_menu_items($items);
+  
+  //Mobile App Admin Pages
+  custom_admin_mobile_app_menu_items($items);
+  
+  //Web View Admin Pages
+  custom_admin_web_view_menu_items($items);
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission()
+ *
+ * Permissions For RTT System Admin Module
+ */
+function custom_admin_permission() {
+  $permissions = array();
+
+  //Overall Admin Permissions
+  custom_admin_overall_permissions($permissions);
+
+  //Mobile App Admin Permissions
+  custom_admin_mobile_app_permissions($permissions);
+
+  //Web View Admin Permissions
+  custom_admin_web_view_permissions($permissions);
+
+  return $permissions;
+}
+
+/**
+ * Implements hook_form_alter()
+ *
+ * Form Alter for the RTT System Admin Module
+ */
+function custom_admin_form_alter(&$form, &$form_state, $form_id) {
+
+  //Overall Admin Form Alters
+  custom_admin_overall_form_alters($form, $form_state, $form_id);
+
+  //Mobile App Admin Form Alters
+  custom_admin_mobile_app_form_alters($form, $form_state, $form_id);
+
+  //Web View Admin Form Alters
+  custom_admin_web_view_form_alters($form, $form_state, $form_id);
+
+}
+
+/**
+ * Implements hook_theme()
+ */
+function custom_admin_theme($existing, $type, $theme, $path) {
+  $module_path = drupal_get_path('module', 'custom_admin');
+  $theme_array = array();
+
+  //Overall Admin Theme Hooks
+  custom_admin_overall_theme($existing, $type, $theme, $path, $module_path, $theme_array);
+
+  //Mobile App Admin Theme Hooks
+  custom_admin_mobile_app_theme($existing, $type, $theme, $path, $module_path, $theme_array);
+
+  //Web View Admin Theme Hooks
+  custom_admin_web_view_theme($existing, $type, $theme, $path, $module_path, $theme_array);
+  
+  return $theme_array;
+}

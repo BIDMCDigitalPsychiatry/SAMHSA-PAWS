@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Feature - Content - Mobile App Badges feature.
+ */
+
+include_once 'feature_content_mobile_app_badges.features.inc';

@@ -1,0 +1,5 @@
+name = Custom HTML Email
+description = Module That Takes Views Bulk Operations (Send HTML Email) and creates a templating system.
+version = 7.x-1.0
+core = 7.x
+package = CUSTOM

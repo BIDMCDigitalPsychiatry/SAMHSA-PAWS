@@ -1,0 +1,12 @@
+<?php
+module_load_include('inc', 'custom_common_functions', 'inc/php_utility_functions');
+module_load_include('inc', 'custom_common_functions', 'inc/drupal_utility_functions');
+module_load_include('inc', 'custom_common_functions', 'inc/arbitrary_hooks');
+
+/**
+ * FUNCTION SET AS EXAMPLE
+ */
+/*function _custom_function_example() {
+  //FUNCTION NAME MUST START WITH UNDERSCORE "_"
+  //eg: "_custom_function_example"
+}*/

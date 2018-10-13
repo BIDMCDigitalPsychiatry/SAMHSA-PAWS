@@ -1,0 +1,38 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the custom_mail_redirect module.
+ *
+ */
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function custom_mail_redirect_install() {
+
+  // set system weight so that custom_mail_redirect runs after other modules
+  db_update('system')
+  ->fields(array(
+    'weight' => 100,
+  ))
+  ->condition('name', 'custom_mail_redirect')
+  ->execute();
+
+  variable_set('custom_mail_redirect_enabled', 0);
+  variable_set('custom_mail_redirect_email', 'dev@informatics-studio.com');
+
+}
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function custom_mail_redirect_uninstall() {
+
+  variable_del('custom_mail_redirect_enabled');
+  variable_del('custom_mail_redirect_email');
+  drupal_set_message('<strong>custom_mail_redirect:</strong> your <em>custom_mail_redirect_email</em> variable has been deleted', 'status');
+
+}
+

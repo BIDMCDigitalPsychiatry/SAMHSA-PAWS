@@ -1,0 +1,150 @@
+<?php
+/**
+ * Implements hook_block_info().
+ *
+ * This hook declares what blocks are provided by the module.
+ */
+function custom_blocks_block_info() {
+  /* Common */
+  //Logo Block
+  $blocks['cb_logo_block'] = array(
+    'info' => t('Logo Block'),
+  );
+  //App Title Block
+  $blocks['cb_app_title_block'] = array(
+    'info' => t('App Title Block'),
+  );
+  //Page Title Block
+  $blocks['cb_page_title_block'] = array(
+    'info' => t('Page Title'),
+  );
+  //Breadcrumb Block
+  $blocks['cb_breadcrumb_block'] = array(
+    'info' => t('Breadcrumb'),
+  );
+  //Copyright Block
+  $blocks['cb_copyright_block'] = array(
+    'info' => t('Copyright Block'),
+  );
+  //SAMHSA Block
+  $blocks['cb_samhsa_block'] = array(
+    'info' => t('SAMHSA Block'),
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * This hook generates the contents of the blocks themselves.
+ */
+function custom_blocks_block_view($delta = '') {
+  //The $delta parameter tells us which block is being requested.
+  $block = array();
+  switch ($delta) {
+    /* Common */
+    // Logo Block
+    case 'cb_logo_block':
+      include(dirname(__FILE__) . '/blocks/common/cb_logo_block.inc');
+      break;
+    //App Title Block
+    case 'cb_app_title_block':
+      include(dirname(__FILE__) . '/blocks/common/cb_app_title_block.inc');
+      break;
+    // Page Title Block
+    case 'cb_page_title_block':
+      include(dirname(__FILE__) . '/blocks/common/cb_page_title_block.inc');
+      break;
+    //Breadcrumb Block
+    case 'cb_breadcrumb_block':
+      include(dirname(__FILE__) . '/blocks/common/cb_breadcrumb_block.inc');
+      break;
+    // Copyright Block
+    case 'cb_copyright_block':
+      include(dirname(__FILE__) . '/blocks/common/cb_copyright_block.inc');
+      break;
+    //SAMHSA Block
+    case 'cb_samhsa_block':
+      include(dirname(__FILE__) . '/blocks/common/cb_samhsa_block.inc');
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_theme()
+ */
+function custom_blocks_theme($existing, $type, $theme, $path) {
+  $module_path = drupal_get_path('module', 'custom_blocks');
+  return array(
+    /* Common */
+    // Logo Block
+    'cb_logo_block' => array(
+      'variables' => array(
+        'global_user' => NULL,
+        'base_path' => NULL,
+        'path_to_theme' => NULL,
+        'logo_path' => NULL,
+        'logo_image' => NULL,
+        'logo_link' => NULL,
+      ),
+      'template' => 'cb-logo-block',
+      'type' => 'theme',
+      'path' => $module_path.'/theme/common',
+    ),
+    //App Title Block
+    'cb_app_title_block' => array(
+      'variables' => array(
+        'global_user' => NULL,
+        'base_path' => NULL,
+        'app_title' => NULL,
+      ),
+      'template' => 'cb-app-title-block',
+      'type' => 'theme',
+      'path' => $module_path.'/theme/common',
+    ),
+    // Page Title Block
+    'cb_page_title_block' => array(
+      'variables' => array(
+        'title' => NULL,
+      ),
+      'template' => 'cb-page-title-block',
+      'type' => 'theme',
+      'path' => $module_path.'/theme/common',
+    ),
+    //Breadcrumb Block
+    'cb_breadcrumb_block' => array(
+      'variables' => array(
+        'title' => NULL,
+      ),
+      'template' => 'cb-breadcrumb-block',
+      'type' => 'theme',
+      'path' => $module_path.'/theme/common',
+    ),
+    // Copyright Block
+    'cb_copyright_block' => array(
+      'variables' => array(
+        'year' => NULL,
+      ),
+      'template' => 'cb-copyright-block',
+      'type' => 'theme',
+      'path' => $module_path.'/theme/common',
+    ),
+    //SAMHSA Block
+    'cb_samhsa_block' => array(
+      'variables' => array(
+        'global_user' => NULL,
+        'base_path' => NULL,
+        'path_to_theme' => NULL,
+        'logo_path' => NULL,
+        'logo_image' => NULL,
+        'logo_link' => NULL,
+        'text' => NULL,
+      ),
+      'template' => 'cb-samhsa-block',
+      'type' => 'theme',
+      'path' => $module_path.'/theme/common',
+    ),
+  );
+}

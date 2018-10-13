@@ -1,0 +1,5 @@
+name = Custom Form Alterations
+description = Provides custom alters, validation, themeing for forms.
+package = CUSTOM
+core = 7.x
+

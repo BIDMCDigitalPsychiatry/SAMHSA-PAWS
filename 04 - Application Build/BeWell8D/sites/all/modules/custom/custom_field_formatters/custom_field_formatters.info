@@ -1,0 +1,7 @@
+name = Custom Field Formatters
+description = Provides Custom Field Formatters For the field API
+package = CUSTOM
+dependencies[] = field
+dependencies[] = field_sql_storage
+core = 7.x
+

@@ -1,0 +1,5 @@
+name = Custom JS
+description = Puts custom javascript in the site for any theme or all even admin theme.
+package = CUSTOM
+core = 7.x
+

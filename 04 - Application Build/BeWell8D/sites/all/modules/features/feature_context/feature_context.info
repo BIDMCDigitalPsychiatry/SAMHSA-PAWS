@@ -1,0 +1,14 @@
+name = Feature - Context
+description = Contains all site contexts.
+core = 7.x
+package = Site Features
+version = 7.x-1.0
+dependencies[] = context
+dependencies[] = ctools
+dependencies[] = custom_blocks
+dependencies[] = local_tasks_blocks
+dependencies[] = menu_block
+features[context][] = home_blocks
+features[context][] = secondary_pages_blocks
+features[ctools][] = context:context:3
+features[features_api][] = api:2

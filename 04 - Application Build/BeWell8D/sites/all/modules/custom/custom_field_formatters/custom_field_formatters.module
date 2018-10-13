@@ -1,0 +1,357 @@
+<?php
+
+/**
+ * @file
+ * Main file for Custom Field Formatters
+ *
+ * Create a formatters for fields in the system
+ */
+
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function custom_field_formatters_field_formatter_info() {
+  $info = array();
+  //All Field Types
+  $types = field_info_field_types();
+
+  //Register - Facet Link Formatter
+  $info['date_custom_format'] = array(
+    'label' => t('Date Field - Custom'),
+    'field types' => array('datetime', 'date', 'datestamp'),
+    'description' => t('Lets you set a custom dat format on the field.'),
+    'settings' => array(
+      'custom_php_date' => '',
+      'date_part' => 'start',
+    ),
+  );
+
+  //Register - Cleanstring Text Formatter
+  $info['cleanstring_text'] = array(
+    'label' => t('Cleanstring Text'),
+    'field types' => array('entityreference', 'taxonomy_term_reference', 'email', 'list_text', 'text_long', 'text_with_summary', 'text'),
+    'description' => t('Take any field and cleanstring its value'),
+    'settings' => array(
+      'seperator' => '-',
+      'prefix' => '',
+      'suffix' => '',
+    ),
+  );
+
+  //Register - Cleanstring Text Formatter
+  $info['splitstring_text'] = array(
+    'label' => t('Splitstring Text'),
+    'field types' => array('text_long', 'text_with_summary', 'text'),
+    'description' => t('Take any text value and split into seperate html elements.'),
+    'settings' => array(
+      'seperator' => '::',
+      'element' => 'span',
+      'class' => 'splitstr',
+    ),
+  );
+
+  //Register - Field Count
+  $info['field_count_text'] = array(
+    'label' => t('Field Count Text'),
+    'field types' => array_keys($types),
+    'description' => t('Take any field and count how many values it has.'),
+    'settings' => array(
+      'prefix' => '',
+      'suffix' => '',
+      'displayonempty' => 1,
+    ),
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function custom_field_formatters_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $custom_form = array();
+  switch ($display['type']) {
+    case 'date_custom_format':
+      $custom_form['custom_php_date'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Custom PHP Date Format'),
+        '#description' => t('Use the custom php settings from ').'<a href="http://php.net/manual/en/function.date.php" target="_blank">here</a>.',
+        '#default_value' => $settings['custom_php_date'],
+      );
+      $custom_form['date_part'] = array(
+        '#type' => 'select',
+        '#title' => t('What part of the dat would you like to output'),
+        '#options' => array(
+          'start' => t('Start Date'),
+          'end' => t('End Date'),
+          'both' => t('Start and End Date'),
+        ),
+        '#default_value' => $settings['date_part']
+      );
+      break;
+    case 'cleanstring_text':
+      $custom_form['seperator'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Seperator Used'),
+        '#description' => t('Select the character used for the seperator.'),
+        '#default_value' => $settings['seperator'],
+      );
+      $custom_form['prefix'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Prefix for the string'),
+        '#default_value' => $settings['prefix'],
+      );
+      $custom_form['suffix'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Suffix for the string'),
+        '#default_value' => $settings['suffix'],
+      );
+      break;
+    case 'splitstring_text':
+      $custom_form['seperator'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Seperator Used'),
+        '#description' => t('Select the character used to split the string.'),
+        '#default_value' => $settings['seperator'],
+      );
+      $custom_form['element'] = array(
+        '#type' => 'textfield',
+        '#title' => t('HTML Element used to wrap splits. (div,span,ol,ul)'),
+        '#default_value' => $settings['element'],
+      );
+      $custom_form['class'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Numerated class for each element.'),
+        '#default_value' => $settings['class'],
+      );
+      break;
+    case 'field_count_text':
+      $custom_form['prefix'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Prefix Count Text'),
+        '#description' => t('String that will prefix the count. (Add spaces if needed)'),
+        '#default_value' => $settings['prefix'],
+      );
+      $custom_form['suffix'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Suffix Count Text'),
+        '#description' => t('String that will suffix the count. (Add spaces if needed)'),
+        '#default_value' => $settings['suffix'],
+      );
+      $custom_form['displayonempty'] = array(
+        '#type' => 'checkbox', 
+        '#title' => t('Display output even When the field has no items.'),
+        '#description' => t('Force Output when no field items.'),
+        '#default_value' => $settings['displayonempty'],
+      );
+      break;
+  }
+  return $custom_form;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ * @return $summary
+ */
+function custom_field_formatters_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  switch ($display['type']) {
+    case 'date_custom_format':
+      $summary = $settings['custom_php_date'] - $settings['date_part'];
+      break;
+    case 'cleanstring_text':
+      $summary = 'Field is using cleanstring text.';
+      break;
+    case 'splitstring_text':
+      $summary = 'Field is using splitstring text.';
+      break;
+    case 'field_count_text':
+      $summary = 'Field is using field count text.';
+      break;
+  }
+  return $summary;
+}
+
+/**
+ * Implements hook_field_formatter_prepare_view().
+ * Load object id and name
+ */
+function custom_field_formatters_field_formatter_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $displays) {
+  foreach ($entities as $id => $entity) {
+    $type = $displays[$id]['type'];
+    $ftype = array_keys($field['columns']);
+    $ftype = reset($ftype);
+    foreach ($items[$id] as $delta => $item) {
+      switch ($type) {
+        case 'date_custom_format':
+          //Do Nothing
+          break;
+        case 'cleanstring_text':
+          switch ($ftype) {
+            //Term Reference
+            case 'tid':
+              $object = taxonomy_term_load($item['tid']);
+              $items[$id][$delta]['name'] = $object->name;
+              $items[$id][$delta]['object_id'] = $item[$ftype];
+              break;
+            //Entity Reference
+            case 'target_id':
+              $entity = entity_load($field['settings']['target_type'], array($item['target_id']));
+              $object = reset($entity);
+              $items[$id][$delta]['name'] = $object->name;
+              $items[$id][$delta]['object_id'] = $item[$ftype];
+              break;
+            //Default Text Value
+            case 'value':
+              $items[$id][$delta]['name'] = $item['value'];
+              $items[$id][$delta]['object_id'] = $item[$ftype];
+              break;
+          }
+          break;
+        case 'splitstring_text':
+          switch ($ftype) {
+            //Default Text Value
+            case 'value':
+              $items[$id][$delta]['split'] = $item['value'];
+              $items[$id][$delta]['object_id'] = $item[$ftype];
+              break;
+          }
+          break;
+        case 'field_count_text':
+          //Do Nothing
+          break;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function custom_field_formatters_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  switch ($display['type']) {
+    case 'date_custom_format':
+      if (count($items) > 0) {
+        foreach ($items as $delta => $item) {
+          $custom_format = $display['settings']['custom_php_date'];
+          $date_part = $display['settings']['date_part'];
+          $date_start = $item['value'];
+          $date_end = (isset($item['value2']) ? $item['value2'] : NULL);
+          $usr_timezone = $item['timezone'];
+          $db_timezone = $item['timezone_db'];
+          if ($usr_timezone != $db_timezone) {
+            $timezone = $usr_timezone;
+          } else {
+            $timezone = $db_timezone;
+          }
+          $output = '';
+          switch ($date_part) {
+            case 'both':
+              $output = format_date(strtotime($date_start), 'custom', $custom_format, $timezone).' - '.format_date(strtotime($date_end), 'custom', $custom_format, $timezone);
+              break;
+            case 'end':
+              $output = format_date(strtotime($date_end), 'custom', $custom_format, $timezone);
+              break;
+            case 'start':
+            default:
+              $output = format_date(strtotime($date_start), 'custom', $custom_format, $timezone);
+              break;
+          }
+          $element[$delta] = array('#markup' => $output);
+        }
+      }
+      break;
+    case 'cleanstring_text':
+      if (count($items) > 0) {
+        $char = $display['settings']['seperator'];
+        $prefix = $display['settings']['prefix'];
+        $suffix = $display['settings']['suffix'];
+        foreach ($items as $delta => $item) {
+          $name = $item['name'];
+          //Add prefix if exists
+          if (!empty($prefix)) {
+            $name = $prefix.$char.$name;
+          }
+          //Add suffix if exists
+          if (!empty($suffix)) {
+            $name = $name.$char.$suffix;
+          }
+          //Strip Tags
+          $name = strip_tags($name);
+          //Lowercase the string
+          $name = strtolower($name);
+          //Remove all special chars and tags from string
+          $name = preg_replace('/\W+/', $char, $name);
+          //Remove seperators that are next to each other
+          $name = preg_replace('/'.$char.'+/', $char, $name);
+          $element[$delta] = array('#markup' => $name);
+        }
+      }
+      break;
+    case 'splitstring_text':
+      if (count($items) > 0) {
+        $splitchar = $display['settings']['seperator'];
+        $htmlelement = $display['settings']['element'];
+        $class = $display['settings']['class'];
+        foreach ($items as $delta => $item) {
+          $split = check_plain($item['split']);
+          $split = explode($splitchar, $split);
+          $output = '<div class="splitstring-item">';
+          switch ($htmlelement) {
+            case 'ol':
+              $output .= '<ol>';
+              foreach ($split as $num => $value) {
+                $classenum = $num + 1;
+                $output .= '<li class="'.$class.'-'.$classenum.'">'.$value.'</li>';
+              }
+              $output .= '</ol>';
+              break;
+            case 'ul':
+              $output .= '<ul>';
+              foreach ($split as $num => $value) {
+                $classenum = $num + 1;
+                $output .= '<li class="'.$class.'-'.$classenum.'">'.$value.'</li>';
+              }
+              $output .= '</ul>';
+              break;
+            case 'div':
+              foreach ($split as $num => $value) {
+                $classenum = $num + 1;
+                $output .= '<div class="'.$class.'-'.$classenum.'">'.$value.'</div>';
+              }
+              break;
+            case 'span':
+            default:
+              foreach ($split as $num => $value) {
+                $classenum = $num + 1;
+                $output .= '<span class="'.$class.'-'.$classenum.'">'.$value.'</span>';
+              }
+              break;
+          }
+          $output .= '</div>';
+          $element[$delta] = array('#markup' => $output);
+        }
+      }
+      break;
+      case 'field_count_text':
+        $displayonempty = $display['settings']['displayonempty'];
+        $perfix = $display['settings']['prefix'];
+        $suffix = $display['settings']['suffix'];
+        $count = count($items);
+        $output = $perfix.$count.$suffix;
+        $emptyoutput = $perfix.'0'.$suffix;
+        if (count($items) > 0) {
+          $element[0] = array('#markup' => $output);
+        } 
+        if (count($items) <= 0 && $displayonempty > 0) {
+          $element[0] = array('#markup' => $emptyoutput);
+        } 
+        break;
+  }
+  return $element;
+}

@@ -1,0 +1,63 @@
+
+
+
+
+BeWell8D is a cloud-based mobile application designed to help individuals incorporate wellness into their personal recovery journey. Wellness can increase quality and years of life through the pursuit of optimal emotional, mental, and physical health. BeWell8D provides users with opportunities for enhancing their well-being by setting and tracking wellness goals based on the Substance Abuse and Mental Services Administration’s (SAMHSA’s) Eight Dimensions of Wellness. BeWell8D allows users to:• Set and track wellness goals• Complete wellness activities• Access helpful resources• Stay motivated with motivational messaging
+This package contains; an initial application build, content documents, design files and user-experience documentation.  
+
+
+
+
+--------------------------------------------------------------------------
+01 - UX DOCUMENTS
+--------------------------------------------------------------------------
+
+This folder contains documentation related to the application's user experience (UX). For an overview of the application, we recommend a review of these files.
+
+wellness-application-interaction-model.docx - This document provides a brief description of the mobile application's interaction model.
+
+wellness-application-application-schematic.pdf - This PDF provides a schematic view of the application's information architecture.
+
+wellness application-screenflow.pdf - This PDF presents a comprehensive screen-by-screen clickthrough of the mobile application.
+
+wellness application-screenflow with annotations.pdf - This PDF presents a comprehensive screen-by-screen clickthrough of the mobile application with associated annotations detailing functionality and interactivity.
+
+
+
+
+--------------------------------------------------------------------------
+02 - UI DOCUMENTS
+--------------------------------------------------------------------------
+This folder contains all of the application's user interface (UI) design files. Assets are available for both the client-facing mobile app and the administrative web app.
+
+The design files are developed in Adobe InDesign. All associated linked files (Adobe Photoshop and Illustrator) and document fonts are included in the package, as well as a PDF preview document.
+
+
+
+
+--------------------------------------------------------------------------
+03 - CONTENT DOCUMENTS
+--------------------------------------------------------------------------
+
+This folder contains drafts of the the mobile application's content, saved as Microsoft Word files. Please note that the files associated with one of the Eight Dimensions of Wellness contain all of that Dimension's Activities, Messages, and Resources. 
+
+Additionally, this folder contains a spreadsheet that defines the application's badging award model, including; Categories, Badges, Award Basis, and Award Metrics. 
+
+
+
+
+--------------------------------------------------------------------------
+04 - APPLICATION BUILD
+--------------------------------------------------------------------------
+
+This folder contains a compressed build of the primary application and associated technical notes. The application was built with Drupal 7 and DrupalGap, a contributed module system built to create cross platform Drupal-based mobile applications via PhoneGap.
+
+
+
+
+
+
+
+
+
+Updated: June 22, 2017

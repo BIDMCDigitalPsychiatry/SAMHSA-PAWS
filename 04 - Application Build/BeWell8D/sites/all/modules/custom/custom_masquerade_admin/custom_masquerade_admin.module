@@ -1,0 +1,66 @@
+<?php
+function custom_masquerade_admin_page_build(&$page) {
+  $block = block_load('masquerade', 'masquerade');
+  $block = _block_render_blocks(array($block));
+  $block = _block_get_renderable_array($block); //dsm($block);
+  $block_output = render($block);
+
+  if(module_exists('masquerade') && isset($block['masquerade_masquerade'])) {
+
+    $markup = '
+    <style type="text/css" media="screen">
+      .custom-masq-admin {
+        position: fixed;
+        bottom: 1px;
+        right: 1px;
+        width: 20px;
+        z-index: 99999;
+        width: 250px;
+      }
+      .custom-masq-hover-button {
+        display: block;
+        overflow: hidden;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 16px;
+        padding: 2px 0px 0px 0px;
+        background-color: #000000;
+        color: #FFFFFF;
+        z-index: 99999;
+        float: right;
+      }
+      .custom-masq-hover-content {
+        display: none;
+        width: 250px;
+        position: relative;
+        overflow: hidden;
+        bottom: 0px;
+        right: 0px;
+        z-index: 99999;
+        background-color: #ffffff;
+        border: 2px dotted #000000;
+        padding: 25px;
+        height: 300px;
+      }
+      .custom-masq-admin:hover .custom-masq-hover-button {
+        display: none;
+      }
+      .custom-masq-admin:hover .custom-masq-hover-content {
+        display: block;
+      }
+    </style>
+
+    <div class="custom-masq-admin">
+      <div class="custom-masq-hover-button">
+        M
+      </div>
+      <div class="custom-masq-hover-content">
+        '.$block_output.'
+      </div>
+    </div>';
+    $page['page_bottom']['custom-masquerade-admin'] = array('#markup' => $markup);
+  }
+}

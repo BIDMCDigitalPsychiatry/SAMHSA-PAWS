@@ -1,0 +1,6 @@
+name = Custom Blocks
+description = Provides Custom Blocks using template files.
+package = CUSTOM
+dependencies[] = block
+core = 7.x
+

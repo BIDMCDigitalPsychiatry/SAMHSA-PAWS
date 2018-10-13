@@ -1,0 +1,22 @@
+<?php
+/**
+ * Implements hook_install().
+ */
+function custom_form_alters_install() {
+	//Set this modules weight
+	db_query("UPDATE {system} SET weight = 100 WHERE name = 'custom_form_alters'");
+}
+
+
+/**
+ * Implements hook_uninstall().
+ */
+function custom_form_alters_uninstall() {
+}
+
+/**
+ * Implements hook_schema().
+ */
+function custom_form_alters_schema() {
+
+}

@@ -1,0 +1,149 @@
+<?php
+
+/* redirect any system generated email to your configured email domain
+ *    usage:
+ *       - in your test site's settings.php set:
+ *       $conf = array('custom_mail_redirect_email' => "mydomain.com");
+ *
+ *   result:
+ *       - input $to:    john_smith@about.com
+ *       - output $to:   john_smith@mydomain.com
+ *
+ *   See README.txt for additional details on test setup
+ *
+ */
+
+/**
+ * Implements hook_menu()
+ */
+function custom_mail_redirect_menu() {
+  $items = array();
+
+  $items['admin/config/development/custom_mail_redirect'] = array(
+    'title' => 'Custom Mail Redirect',
+    'description' => 'Settings for Custom Mail Redirect module.',
+    'access arguments' => array('administer site configuration'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('custom_mail_redirect_admin_settings'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+// System Admin Form - callback for menu item listed above
+/**
+* Page callback for admin settings form
+*
+* @param mixed $form
+* @param mixed $form_state
+*/
+
+function custom_mail_redirect_admin_settings($form, &$form_state) {
+  // system settings
+
+  $form['custom_mail_redirect_enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable/Disable Mail Redirect'),
+    '#default_value' => variable_get('custom_mail_redirect_enabled', 0),
+  );
+
+  $form['custom_mail_redirect_email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Redirect Mail Address'),
+    '#default_value' => variable_get('custom_mail_redirect_email'),
+    '#required' => TRUE,
+    '#description' => t("Set the redirect mail address to that of your catch-all mail address."),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+* Implement mail_alter hook to replace domain of all email addresses
+* redirect any system generated email to your configured email domain
+*
+*   shows a msg to indicate whenever an email has been redirected.
+*
+* @param string $message
+*/
+function custom_mail_redirect_mail_alter(&$message) {
+
+  $enabled = variable_get('custom_mail_redirect_enabled');
+  $myemail = variable_get('custom_mail_redirect_email');
+
+  if ($myemail && $enabled == 1) {
+    drupal_set_message(t("The following TO address or list: %to has been redirected to the following TEST DOMAIN: %mydomain",
+      array('%to' => $message['to'], '%mydomain' => $myemail), array('langcode' => 'status')));
+
+    /* need to handle RFC2822 formats for $message['to']:
+     *    user@example.com
+     *    user@example.com, anotheruser@example.com
+     *    User <user@example.com>
+     *    User <user@example.com>, Another User <anotheruser@example.com>
+     */
+
+    if (stristr($message['to'], ",")) { // then we have a list
+      $tos = split(",", $message['to']);
+      array_walk($tos, '_custom_mail_redirect_trim_array_values');
+    }
+    else {
+      $tos = (array) $message['to'];
+    }
+
+    foreach ($tos as $key => $to) {
+      if (stristr($to, "<")) {
+        $tos[$key] = preg_replace('^(.*)<((.+)@.+)>^', "$1<$myemail>", $to);
+      }
+      else {
+        $tos[$key] = preg_replace('^((.+)@.+)^', "$myemail", $to);
+      }
+    }
+
+    $message['to'] = join(",", $tos);
+  }
+}
+
+/**
+ * Implements hook_requirements().
+ *    - To add to note if mail redirect is defined
+ *    - also does check if mimemail has been patched
+ */
+function custom_mail_redirect_requirements($phase) {
+  $requirements = array();
+  $mimenote = "";
+  if ($phase == 'runtime') {
+    if (stristr(variable_get('custom_mail_redirect_email'), "@") && stristr(variable_get('custom_mail_redirect_enabled'), "1") ) {
+      $mimenote = "";
+      $msg = "Site mail is being redirected to <strong>" . variable_get('custom_mail_redirect_email') . "</strong>";
+      $severity = REQUIREMENT_WARNING;
+      // check if mimemail module is installed and if it has been patched
+      if (module_exists("mimemail")) {
+        $mimenote = "Mimemail is being used on your site, ";
+        $mimemail_code = file_get_contents(drupal_get_path('module', 'mimemail') . "/mimemail.module");
+        if (stristr($mimemail_code, "module_implements('mail_alter')")) {
+          $mimenote .= "and it has been patched to work with Development Mail Redirect";
+          $severity = REQUIREMENT_WARNING;
+        }
+        else {
+          $mimenote .= "BUT it has NOT been patched to work with Development Mail Redirect";
+          $severity = REQUIREMENT_ERROR;
+        }
+      }
+    }
+    else {
+      $msg = "Mail redirect is installed but your mail is not set to be redirected.";
+      $severity = REQUIREMENT_WARNING;
+    }
+    $requirements['custom_mail_redirect_status'] = array(
+      'title' => 'Custom Mail Redirect',
+      'value' => $msg . "<br>" . $mimenote,
+      'severity' => $severity,
+    );
+  }
+  return $requirements;
+}
+
+function _custom_mail_redirect_trim_array_values(&$value) {
+  $value = trim($value);
+}

@@ -1,0 +1,5 @@
+name = Custom Masquerade Admin
+description = Puts the masquerade blocks in an easy to locate postion.
+package = CUSTOM
+core = 7.x
+

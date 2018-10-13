@@ -1,0 +1,25 @@
+<?php
+/**
+ * Add JS to all themes
+ */
+//function custom_js_preprocess_html(&$variables) {
+//  $module_path = drupal_get_path('module', 'custom_js');
+//  $active_theme_path = path_to_theme();
+//  //Add your custom js
+//  drupal_add_js($module_path . '/js/JSNAME.js');
+//}
+
+/**
+ * Attache JS to all forms
+ * usage ex: https://www.appnovation.com/blog/drupal-tip-using-formafter-build
+ */
+function custom_js_form_alter(&$form, $form_state, $form_id) {
+  $form['#after_build'][] = 'custom_js_form_after_build'; //Calls function
+}
+function custom_js_form_after_build($form, &$form_state) {
+  $module_path = drupal_get_path('module', 'custom_js');
+  $active_theme_path = path_to_theme();
+  //Attach your custom js
+  $form['#attached']['js'][] = $module_path . '/js/forms_hide_empty_fieldsets.js';
+  return $form;
+}

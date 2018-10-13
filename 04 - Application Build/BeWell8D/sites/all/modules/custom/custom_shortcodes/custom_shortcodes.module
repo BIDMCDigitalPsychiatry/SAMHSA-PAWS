@@ -1,0 +1,121 @@
+<?php
+/**
+ * @file
+ * Provides basic Shortcodes (as examples).
+ */
+
+/**
+ * Implements hook_shortcode_info().
+ *
+ * Using the same formatting as hook_filter_info()
+ */
+function custom_shortcodes_shortcode_info() {
+
+  /**
+   * Structural Shortcodes
+   */
+  $shortcodes['link_box'] = array(
+    'title' => t('Link Box'),
+    'description' => t('Lets a user insert a link box into content.'),
+    'process callback' => 'custom_shortcodes_link_box',
+    // todo: implements this.
+    // 'settings callback' => '_shortcode_settings_form',
+    'attributes callback' => 'custom_shortcodes_link_box_att',
+    'tips callback' => 'custom_shortcodes_link_box_tip',
+  );
+  $shortcodes['mobile_app_accordion'] = array(
+    'title' => t('Mobile App: Accordion'),
+    'description' => t('Lets a user insert an accordion for the mobile application.'),
+    'process callback' => 'custom_shortcodes_mobile_app_accordion',
+    // todo: implements this.
+    // 'settings callback' => '_shortcode_settings_form',
+    'attributes callback' => 'custom_shortcodes_mobile_app_accordion_att',
+    'tips callback' => 'custom_shortcodes_mobile_app_accordion_tip',
+  );
+  
+  /**
+   * Genral Shortcodes
+   */
+  $shortcodes['date_embed'] = array(
+    'title' => t('General - Date Embed'),
+    'description' => t('Embeds date with given time and format. For example: [date format="Y-m-d" /] or [date time="now" format="Y-m-d" /]. Default is time="now" format="Y-m-d". <strong>time</strong> can be any string which supports by <a href="http://php.net/manual/en/function.strtotime.php" target="_blank" >strtotime()</a> and <strong>format</strong> can be any string which supports by <a href="http://php.net/manual/en/function.date.php" target="_blank" >date()</a>.'),
+    'process callback' => 'custom_shortcodes_date_embed',
+    'attributes callback' => 'custom_shortcodes_date_embed_att',
+    'tips callback' => 'custom_shortcodes_date_embed_tip',
+  );
+  $shortcodes['gmap_embed'] = array(
+    'title' => t('General - Google map Embed'),
+    'description' => t('Embed google map to the text by url or address.'),
+    'process callback' => 'custom_shortcodes_gmap_embed',
+    'attributes callback' => 'custom_shortcodes_gmap_embed_att',
+    'tips callback' => 'custom_shortcodes_gmap_embed_tip',
+  );
+  $shortcodes['video_embed'] = array(
+    'title' => t('General - Video Embed'),
+    'description' => t('Inserts embedded video code.'),
+    'process callback' => 'custom_shortcodes_video_embed',
+    'attributes callback' => 'custom_shortcodes_video_embed_att',
+    'tips callback' => 'custom_shortcodes_video_embed_tip',
+  );
+   
+  /**
+   * Views Shortcodes
+   */
+  $shortcodes['view_result_count'] = array(
+    'title' => t('Views - View Result Count'),
+    'description' => t('Lets a user see the number of results for any view. With arguments.'),
+    'process callback' => 'custom_shortcodes_view_result_count',
+    'attributes callback' => 'custom_shortcodes_view_result_count_att',
+    'tips callback' => 'custom_shortcodes_view_result_count_tip',
+  );
+
+  return $shortcodes;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function custom_shortcodes_theme() {
+  $theme = array();
+
+  /**
+   * Structural Shortcodes
+   */
+  $theme['link_box'] = array(
+    'variables' => array(
+      'title' => '',
+      'link' => '',
+      'button_title' => '',
+    ),
+  );
+  $theme['mobile_app_accordion'] = array(
+    'variables' => array(
+      'title' => '',
+    ),
+  );
+
+  return $theme;
+}
+
+//============
+// Includes
+//============
+
+
+/**
+ * Structural Shortcodes
+ */
+include(dirname(__FILE__) . '/inc/structure/custom_shortcodes_link_box.inc');
+include(dirname(__FILE__) . '/inc/structure/custom_shortcodes_mobile_app_accordion.inc');
+
+/**
+ * Genral Shortcodes
+ */
+include(dirname(__FILE__) . '/inc/general/custom_shortcodes_date_embed.inc');
+include(dirname(__FILE__) . '/inc/general/custom_shortcodes_gmap_embed.inc');
+include(dirname(__FILE__) . '/inc/general/custom_shortcodes_video_embed.inc');
+ 
+/**
+ * Views Shortcodes
+ */
+include(dirname(__FILE__) . '/inc/views/custom_shortcodes_view_result_count.inc');

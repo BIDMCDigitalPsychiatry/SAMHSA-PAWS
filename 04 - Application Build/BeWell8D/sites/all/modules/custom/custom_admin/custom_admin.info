@@ -1,0 +1,5 @@
+name = Custom Site Administration
+description = Provides Settings Pages So that administrators may configure settings for the site.
+package = CUSTOM
+core = 7.x
+

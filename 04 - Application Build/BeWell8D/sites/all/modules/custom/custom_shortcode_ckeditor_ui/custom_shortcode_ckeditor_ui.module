@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * Implementation of hook_permission().
+ */
+function custom_shortcode_ckeditor_ui_permission() {
+  return array(
+    'access custom shortcode ckeditor ui' => array('title' => t('Access <em>Custom Shortcode CKEditor UI</em>')),
+    'administer custom shortcode ckeditor ui' => array('title' => t('Administer <em>Custom Shortcode CKEditor UI</em>')),
+  );
+}
+
+
+/**
+ * Implementation of hook_menu().
+ */
+function custom_shortcode_ckeditor_ui_menu() {
+  $items['admin/config/content/custom_shortcode_ckeditor_ui'] = array(
+    'title' => 'Custom Shortcode CKEditor UI',
+    'description' => 'Configure Custom Shortcode CKEditor UI.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('custom_shortcode_ckeditor_ui_settings_form'),
+    'access arguments' => array('administer custom shortcode ckeditor ui'),
+    'file' => 'custom_shortcode_ckeditor_ui_settings.admin.inc',
+  );
+  $items['custom_shortcode_ckeditor_ui/%/%'] = array(
+    'title' => 'Shortcode List Form',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('custom_shortcode_ckeditor_ui_form', 1, 2),
+    'access callback' => TRUE,
+    'file' => 'custom_shortcode_ckeditor_ui_form.inc',
+  );
+  return $items;
+}
+
+
+/**
+ * Implementation of hook_ckeditor_plugin().
+ */
+function custom_shortcode_ckeditor_ui_ckeditor_plugin() {
+  $module_path = drupal_get_path('module', 'custom_shortcode_ckeditor_ui');
+  $plugins     = array();
+
+  $plugins['CustomShortcodeCkeditorUI'] = array(
+    'name'    => 'CustomShortcodeCkeditorUI',
+    'desc'    => t('Custom Shortcode CKEditor UI - A plugin to easily insert shortcodes via CKEditor'),
+    'path'    => $module_path . '/plugins/CustomShortcodeCkeditorUI/',
+    'default' => 't',
+    'buttons' => array(
+      'CustomShortcodeCkeditorUI' => array(
+        'label' => 'Insert Shortcode',
+        'icon' => 'icons/CustomShortcodeCkeditorUI.png',
+      ),
+    ),
+  );
+  
+  return $plugins;
+}
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function custom_shortcode_ckeditor_ui_form_alter(&$form, $form_state, $form_id) {
+  // todo: Attach form id to all textarea.
+  if (strpos($form_id, 'node_form') !== FALSE || 
+      strpos($form_id, 'comment') !== FALSE || 
+      strpos($form_id, 'block') !== FALSE || 
+      strpos($form_id, 'entity_edit_form') !== FALSE || 
+      strpos($form_id, 'ctools_custom_content_type_edit_form') !== FALSE || 
+      strpos($form_id, 'ctools_export_ui_edit_item_form') !== FALSE || 
+      strpos($form_id, 'bean_form') !== FALSE) {
+    drupal_add_css(drupal_get_path('module', 'custom_shortcode_ckeditor_ui') . "/plugins/CustomShortcodeCkeditorUI/styles/CustomShortcodeCkeditorUIDialog.css");
+  }
+}
+
+ /**
+ * Implements hook_admin_paths().
+ */
+function custom_shortcode_ckeditor_ui_admin_paths() {
+  return array('custom_shortcode_ckeditor_ui*' => TRUE);
+}

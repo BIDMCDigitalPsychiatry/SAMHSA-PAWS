@@ -1,0 +1,103 @@
+<?php
+/**
+ * Implements hook_menu()
+ *
+ * Sets up the inprol Custom Pages
+ */
+function custom_pages_menu() {
+  //Events Pages
+  $items['home'] = array(
+   'title' => 'Home',
+   'description' => 'Home Page',
+   'page callback' => 'custom_page__home',
+   'access arguments' => array('access content'),
+   'file' => 'pages/custom_page__home.inc',
+  );
+  
+  //Mobile App Pages
+  
+  $items['mobile/app/vars/vars.json'] = array(
+    'access callback'   => true, // available to all
+    'page callback'     => 'custom_page__mobile_app_vars_json', // defined below
+    'delivery callback' => 'drupal_json_output',
+    'access arguments' => array('access content'),
+    'file' => 'pages/custom_page__mobile_app_vars_json.inc',
+  );
+  
+  $items['mobile/app/vars/%/user-vars.json'] = array(
+    'page callback'     => 'custom_page__mobile_app_user_vars_json', // defined below
+    'page arguments'    => array(3),
+    'delivery callback' => 'drupal_json_output',
+    'access callback' => 'custom_page__mobile_app_auth_user_access_check',
+    'file' => 'pages/custom_page__mobile_app_user_vars_json.inc',
+  );
+  
+  $items['mobile/app/activity-complete/%/%/%/activity-complete.json'] = array(
+    'page callback'     => 'custom_page__mobile_app_activity_complete_json', // defined below
+    'page arguments'    => array(3,4,5),
+    'delivery callback' => 'drupal_json_output',
+    'access callback' => 'custom_page__mobile_app_auth_user_access_check',
+    'file' => 'pages/custom_page__mobile_app_activity_complete_json.inc',
+  );
+  
+  $items['mobile/app/my-achievments/%/progress.json'] = array(
+    'page callback'     => 'custom_page__mobile_app_my_achievements_progress_json', // defined below
+    'page arguments'    => array(3),
+    'delivery callback' => 'drupal_json_output',
+    'access callback' => 'custom_page__mobile_app_auth_user_access_check',
+    'file' => 'pages/custom_page__mobile_app_my_achievements_progress_json.inc',
+  );
+  
+  $items['mobile/app/my-achievments/%/badges.json'] = array(
+    'page callback'     => 'custom_page__mobile_app_my_achievements_badges_json', // defined below
+    'page arguments'    => array(3),
+    'delivery callback' => 'drupal_json_output',
+    'access callback' => 'custom_page__mobile_app_auth_user_access_check',
+    'file' => 'pages/custom_page__mobile_app_my_achievements_badges_json.inc',
+  );
+
+  return $items;
+}
+
+
+/**
+ * Permissions For inprol Custom Pages Module
+ */
+/*function custom_pages_permission() {
+  return array(
+    'view home' => array(
+      'title' => t('View Home Page'),
+      'description' => t('Set who can view the Home page.'),
+    ),
+  );
+}*/
+
+
+/**
+ * Implements hook_theme()
+ */
+function custom_pages_theme($existing, $type, $theme, $path) {
+  $module_path = drupal_get_path('module', 'custom_pages');
+  return array(
+    // Home Page
+    'custom_page__home' => array(
+      'variables' => array(
+        'home_vars' => NULL,
+      ),
+      'template' => 'custom-page--home',
+      'type' => 'theme',
+      'path' => $module_path.'/theme',
+    ),
+  );
+}
+
+/**
+ * Mobile user athenticated check
+ */
+function custom_page__mobile_app_auth_user_access_check() {  
+  global $user;
+  if($user->uid >= '1') {
+    return TRUE;
+  }
+  return FALSE; 
+}

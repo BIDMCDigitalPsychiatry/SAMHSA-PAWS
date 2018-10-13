@@ -1,0 +1,6 @@
+name = Feature - Menus
+description = Contains Any Menu Links for the site that need to be in config.
+core = 7.x
+package = Site Features
+version = 7.x-1.0
+features[features_api][] = api:2

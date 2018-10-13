@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Feature - Content - Push Notification feature.
+ */
+
+include_once 'feature_content_push_notification.features.inc';

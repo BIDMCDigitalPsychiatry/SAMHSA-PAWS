@@ -1,0 +1,1 @@
+<div class="breadcrumb"><?php print $breadcrumb; ?></div>

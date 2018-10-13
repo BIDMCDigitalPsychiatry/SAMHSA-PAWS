@@ -1,0 +1,6 @@
+name = Custom Rules
+description = "Custom Rules For Any Site"
+package = CUSTOM
+dependencies[] = "rules"
+core = 7.x
+

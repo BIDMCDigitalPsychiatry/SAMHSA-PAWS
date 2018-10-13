@@ -1,0 +1,5 @@
+name = Custom Pages
+description = Provides Custom Pages for the site.
+package = CUSTOM
+core = 7.x
+

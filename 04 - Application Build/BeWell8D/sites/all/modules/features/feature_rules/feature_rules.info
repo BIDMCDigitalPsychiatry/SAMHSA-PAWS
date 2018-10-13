@@ -1,0 +1,17 @@
+name = Feature - Rules
+description = Contains all site rules.
+core = 7.x
+package = Site Features
+version = 7.x-1.0
+dependencies[] = custom_rules_is
+dependencies[] = entity
+dependencies[] = feature_content_push_notification
+dependencies[] = push_notifications
+dependencies[] = rules
+dependencies[] = rules_scheduler
+features[features_api][] = api:2
+features[rules_config][] = rules_new_user_create_user_settings
+features[rules_config][] = rules_push_notifications_schedule_off_
+features[rules_config][] = rules_push_notifications_schedule_on_
+features[rules_config][] = rules_send_push_notification_reschedule
+features[rules_config][] = rules_user_removed_delete_settings

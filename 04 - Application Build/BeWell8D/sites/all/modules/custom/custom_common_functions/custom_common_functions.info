@@ -1,0 +1,5 @@
+name = CUSTOM Common Functions / And Arbitrary Hooks
+description = Allows you to add common functions that are used throughout the site.
+package = CUSTOM
+core = 7.x
+

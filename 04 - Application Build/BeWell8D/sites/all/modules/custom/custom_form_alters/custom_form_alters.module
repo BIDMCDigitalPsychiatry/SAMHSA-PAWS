@@ -1,0 +1,72 @@
+<?php
+/**
+ * Implementation hook_form_alter();
+ * Sets up all cutomizations files
+ */
+function custom_form_alters_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  //dpm($form_id);
+  //All Forms
+  switch ($form_id) {
+    case 'user_profile_form':
+      $form['#prefix'] = '<div class="section p-top-large p-btm-large"><div class="row-12"><div class="col-8">';
+      $form['#suffix'] = '</div></div></div>';
+      
+      //$org_pass_prefix = $form['account']['pass']['#prefix'];
+      //$org_pass_prefix = str_replace('<ul>', '<ul class="list-bullet-plain">', $org_pass_prefix);
+      $org_pass_prefix = '';
+      $new_pass_prefix = '<div class="wysiwyg"><hr><p><strong>To change the current use password, enter the new password in both fields.</strong>'.$org_pass_prefix.'<br></div>';
+      $form['account']['pass']['#prefix'] = $new_pass_prefix;
+      $form['account']['pass']['#description'] = null;
+      $form['account']['current_pass']['#description'] = null;
+      
+      if ($user->uid != '1') {
+        $form['field_user_settings_node']['#access'] = false;
+      }
+      
+      //Insert Requirement Check notice
+      $mobile_app__app_title = variable_get('mobile_app__app_title', 'No Title Set');
+      $checkMarkup = '<div class="requirement-check-notice"><p style="margin-bottom: 0px;">To access 
+      <strong>' . $mobile_app__app_title . '</strong>, all users are required to read and accept SAMHSA’s 
+      Rules of Behavior for Use of HHS Information Resources (Rules). Please read the 
+      <a href="https://www.hhs.gov/ocio/policy/hhs-rob.html" target="_blank" style="color: blue; text-decoration: underline;">Rules</a> 
+      and select the checkbox below for "I agree." Hitting submit will act as your digital acknowledgement 
+      of having read and agreeing to adhere to the Rules.</p></div>';
+      $form['requiremntchecknotice'] = array(
+        '#markup' => $checkMarkup,
+      );
+      
+      //Insert Account Requirement Check
+      $form['requiremntcheck'] = array(
+        '#type' => 'checkbox',
+        '#required' => true,
+        '#title' => t('I Agree'),
+        '#prefix' => '<div class="requirement-check" style="margin-top: 0px; padding-bottom: 10px;">',
+        '#suffix' => '</div>',
+      );
+      
+      //dsm($form);
+      break;
+    case 'user_login':
+      $form['#prefix'] = '<div class="section p-top-large p-btm-large"><div class="row-12"><div class="col-8">';
+      $form['#suffix'] = '</div></div></div>';
+      $form['notice'] = array(
+        '#markup' => '<div class="form-box wysiwyg"><p>You are accessing a mobile application provided 
+        by an agency of the U.S. Government. System usage may be monitored, recorded, and subject to audit. 
+        Unauthorized use of the system is prohibited and subject to criminal and civil penalties. Use of 
+        the system indicates consent to monitoring and recording.</p></div><br>',
+      );
+      //dsm($form);
+      break;
+    case 'user_pass':
+      $form['#prefix'] = '<div class="section p-top-large p-btm-large"><div class="row-12"><div class="col-8">';
+      $form['#suffix'] = '</div></div></div>';
+      $form['name']['#description'] = 'You may login with either your assigned username or your e-mail address.';
+      //dsm($form);
+      break;
+    case 'user_pass_reset':
+      $form['#prefix'] = '<div class="section p-top-large p-btm-large"><div class="row-12"><div class="col-8">';
+      $form['#suffix'] = '</div></div></div>';
+      break;
+  }
+}

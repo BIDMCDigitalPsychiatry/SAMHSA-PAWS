@@ -1,0 +1,38 @@
+name = is_2016
+description = This theme was built by <a href="http://informatics-studio.com/">Informatics Studio</a>.
+package = Custom
+version = 1.0
+core = 7.x
+
+;;;;;;;;;;;;;;;;;;;
+;;; Stylesheets ;;;
+;;;;;;;;;;;;;;;;;;;
+
+stylesheets[all][] = css/styles.css
+
+; NOTE: Add the rest of your css files in template_php/custom/preprocess/html/pp-html.php
+; in the function: [ _custom_preprocess_html() ]
+
+
+;;;;;;;;;;;;;;;
+;;; Scripts ;;;
+;;;;;;;;;;;;;;;
+
+; NOTE: Add your js files in template_php/custom/preprocess/html/pp-html.php
+; in the function: [ _custom_preprocess_html() ]
+
+
+
+;;;;;;;;;;;;;;;
+;;; Regions ;;;
+;;;;;;;;;;;;;;;
+
+; Header
+regions[headerfront] = Header Front
+regions[headersecondarytop] = Header Secondary Top
+regions[headersecondarybot] = Header Secondary Bottom
+; Content
+regions[content] = Content Mid
+; Footer
+regions[footerfront] = Footer Front
+regions[footersecondary] = Footer Secondary

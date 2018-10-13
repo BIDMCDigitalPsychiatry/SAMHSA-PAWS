@@ -1,0 +1,5 @@
+name = Custom Shortcodes
+description = Provides custom shortcode tags.
+package = CUSTOM
+core = 7.x
+dependencies[] = shortcode

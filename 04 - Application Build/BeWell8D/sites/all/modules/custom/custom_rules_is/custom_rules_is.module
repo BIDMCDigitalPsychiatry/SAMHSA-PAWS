@@ -1,0 +1,224 @@
+<?php
+
+/**
+ * @file
+ * Custom Rules For Drupal 7
+ */
+
+/**
+ * EVENTS -----------------------------------------------------------------------------------------------------
+ */
+function custom_rules_is_rules_event_info() {
+  $events = array();
+
+  $events['custom_rules_push_notification_schedule_on'] = array(
+    'label' => t('Push Schedule (On) Set'),
+    'group' => t('-Custom-'),
+  );
+  $events['custom_rules_push_notification_schedule_off'] = array(
+    'label' => t('Push Schedule (Off) Set'),
+    'group' => t('-Custom-'),
+  );
+
+  return $events;
+}
+
+
+/**
+ * CONDITIONS -----------------------------------------------------------------------------------------------------
+ */
+
+/**
+* Implements of hook_rules_condition_info().
+*/
+function custom_rules_is_rules_condition_info() {
+  $conditions = array();
+
+  // Don't forget to return the array of condition information!
+  return $conditions;
+}
+
+
+
+/**
+ * ACTIONS -----------------------------------------------------------------------------------------------------
+ */
+
+function custom_rules_is_rules_action_info() {
+  $actions = array(
+    'cr_set_current_push_scheduled_dimension_term' => array(
+      'label' => t('Set current scheduled dimension term.'),
+      'group' => t('-Custom-'),
+      'provides' => array(
+        'dimension_term_id_current' => array(
+          'label' => t('Current Scheduled Dimension Term ID.'),
+          'type' => 'text',
+        ),
+      ),
+    ),
+    'cr_set_next_push_scheduled_dimension_term' => array(
+      'label' => t('Set next scheduled dimension term.'),
+      'group' => t('-Custom-'),
+      'provides' => array(
+        'dimension_term_id_next' => array(
+          'label' => t('Next Scheduled Dimension Term ID.'),
+          'type' => 'text',
+        ),
+      ),
+    ),
+    /*'cr_get_push_scheduled_days_between' => array(
+      'label' => t('Get the days between scheduled push notifications.'),
+      'group' => t('-Custom-'),
+      'provides' => array(
+        'push_scheduled_days_between' => array(
+          'label' => t('Days Between Scheduled Push Notifications.'),
+          'type' => 'text',
+        ),
+      ),
+    ),*/
+    'cr_get_random_push_notification_content' => array(
+      'label' => t('Get Random Dimension - Push Notification'),
+      'group' => t('-Custom-'),
+      'provides' => array(
+        'push_notification_nid' => array(
+          'label' => t('Push Notification - NID'),
+          'type' => 'integer',
+        ),
+        'push_notification_title' => array(
+          'label' => t('Push Notification - Title'),
+          'type' => 'text',
+        ),
+        'push_notification_relation' => array(
+          'label' => t('Push Notification - Relation'),
+          'type' => 'integer',
+        ),
+        'push_notification_message' => array(
+          'label' => t('Push Notification - Message'),
+          'type' => 'text',
+        ),
+      ),
+    ),
+  );
+
+  // Don't forget to return the array of action information!
+  return $actions;
+}
+
+
+
+/**
+ * CONDITION FUNCTIONS (CALLBACKS) -----------------------------------------------------------------------------------
+ */
+
+
+
+/**
+ * ACTION FUNCTIONS (CALLBACKS) -----------------------------------------------------------------------------------
+ */
+function cr_set_current_push_scheduled_dimension_term() {
+  $ordered_wellness_goal_ids = cr_get_array_wellness_goal_ids();
+  $first_wellness_goal_id = current($ordered_wellness_goal_ids);
+  $current_wellness_goal_id = variable_get('web_view__push_notifications_wg_id', $first_wellness_goal_id);
+  $next_wellness_goal_id = cr_get_next_wellness_goal_id($ordered_wellness_goal_ids, $current_wellness_goal_id);
+  
+  $term = array();
+  $term_id = 0;
+
+  // Each returned value in the array must be keyed with the exact machine name
+  // specified in the action's description in hook_rules_action_info.
+  $return_id = $current_wellness_goal_id;
+  variable_set('web_view__push_notifications_wg_id', $return_id);
+  //dsm($return_id);
+  return array(
+    'dimension_term_id_current' => $return_id,
+  );
+}
+
+function cr_set_next_push_scheduled_dimension_term() {
+  $ordered_wellness_goal_ids = cr_get_array_wellness_goal_ids();
+  $first_wellness_goal_id = current($ordered_wellness_goal_ids);
+  $current_wellness_goal_id = variable_get('web_view__push_notifications_wg_id', $first_wellness_goal_id);
+  $next_wellness_goal_id = cr_get_next_wellness_goal_id($ordered_wellness_goal_ids, $current_wellness_goal_id);
+
+  // Each returned value in the array must be keyed with the exact machine name
+  // specified in the action's description in hook_rules_action_info.
+  $return_id = $next_wellness_goal_id;
+  variable_set('web_view__push_notifications_wg_id', $return_id);
+  //dsm($return_id);
+  return array(
+    'dimension_term_id_next' => $return_id,
+  );
+}
+
+// function cr_get_push_scheduled_days_between() {
+//   $days_between = variable_get('web_view__push_notifications_wg_id', $first_wellness_goal_id);
+
+//   // Each returned value in the array must be keyed with the exact machine name
+//   // specified in the action's description in hook_rules_action_info.
+//   $return_time = '+'.$days_between.' day';
+//   //dsm($return_time);
+//   return array(
+//     'push_scheduled_days_between' => $return_time,
+//   );
+// }
+
+function cr_get_random_push_notification_content() {
+  $ordered_wellness_goal_ids = cr_get_array_wellness_goal_ids();
+  $first_wellness_goal_id = current($ordered_wellness_goal_ids);
+  $current_wellness_goal_id = variable_get('web_view__push_notifications_wg_id', $first_wellness_goal_id);
+  
+  $results = views_get_view_result('rules_view_get_random_push_notification', 'panel_pane_1', $current_wellness_goal_id);
+  $result = $results[0];
+  
+  $push_nid = (int) $result->nid;
+  $push_title = (string) $result->node_title;
+  $push_relation = (int) $result->field_field_wellness_goal_relation[0]['raw']['target_id'];
+  $push_message = (string) $result->field_field_push_notification_message[0]['rendered']['#markup'];
+  
+  // Each returned value in the array must be keyed with the exact machine name
+  // specified in the action's description in hook_rules_action_info.
+  return array(
+    'push_notification_nid' => $push_nid,
+    'push_notification_title' => $push_title,
+    'push_notification_relation' => $push_relation,
+    'push_notification_message' => $push_message,
+  );
+}
+
+/**
+ * USED FUNCTIONS (CALLBACKS) -----------------------------------------------------------------------------------
+ */
+
+/* Get array of wellness goal ids in order. */
+function cr_get_array_wellness_goal_ids() {
+  $term_ids = array();
+  $results = views_get_view_result('eight_dimensions_of_wellness_list', 'page');
+  
+  foreach ($results as $result) {
+    $term_ids[$result->tid] = $result->tid;
+  }
+  
+  //dsm($term_ids);
+  return $term_ids;
+}
+
+/* Get Next Wellness Goal ID */
+function cr_get_next_wellness_goal_id($ids, $current_id) {
+  $loop_step = 'Start';
+  foreach ($ids as $key => $value) {
+    //This Gets The Next ID
+    if ($loop_step === 'Next') {
+      $next_id = $key;
+      $loop_step = 'Complete';
+    }
+    //This tells the loop that the next set of items is the next id.
+    if ($current_id == $key) {
+      $loop_step = 'Next';
+    }
+  }
+  if (isset($next_id)) {
+    return $next_id;
+  } else {
+    return array_values($ids)[0];
+  }
+}

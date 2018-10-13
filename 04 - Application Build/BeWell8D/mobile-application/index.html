@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <title>BeWell8D</title>
+      <meta charset="utf-8" />
+      <meta name="format-detection" content="telephone=no" />
+      <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+      <link rel="shortcut icon" href="favicon.ico" />
+      <link rel="stylesheet" href="css/styles.css" />
+      <script src="phonegap.js"></script>
+    </head>
+    <body>
+      <!-- Mobile Application Splash Screen -->
+      <div id="_drupalgap_splash" data-role="page" class="bg-img-splash -full">
+         <div class="ui-content" data-role="content">
+            <div id="_drupalgap_splash_content">
+              <h1 class="h1 app-name">BeWell8D</h1>
+              <!--<img src="images/drupalgap.jpg" alt="DrupalGap" style="position: absolute; top: 50%; left: 50%; margin-left: -64px; margin-top: -64px;" />-->
+            </div>
+         </div>
+      </div>
+      <!-- Load PhoneGap (Cordova) -->
+      <script type="text/javascript" charset="utf-8" src="js/scripts.js"></script>
+      <script type="text/javascript" charset="utf-8" src="app/site_path.js"></script>
+      <script type="text/javascript" charset="utf-8" src="app/settings.js"></script>
+      <script type="text/javascript">
+        drupalgap_onload();
+      </script>
+      <script type='text/javascript' id="__bs_script__">//<![CDATA[
+        if (Drupal.settings.browsersync == true) {
+          document.write("<script async src='//HOST:8081/browser-sync/browser-sync-client.js'><\/script>".replace("HOST", location.hostname));
+        }
+      //]]></script>
+    </body>
+</html>

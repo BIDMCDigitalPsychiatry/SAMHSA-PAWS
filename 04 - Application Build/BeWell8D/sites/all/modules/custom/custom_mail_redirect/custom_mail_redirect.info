@@ -1,0 +1,11 @@
+
+name = Custom Mail Redirect
+description = Used for testing mail functions on test sites with emails being redirected to one specific email address.
+package = CUSTOM
+configure = admin/config/development/custom_mail_redirect
+
+core = 7.x
+
+files[] = custom_mail_redirect.install
+files[] = custom_mail_redirect.module
+

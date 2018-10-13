@@ -1,0 +1,4 @@
+// Site Path (do not use a trailing slash)
+Drupal.settings.site_path = 'https://pra-1501--paw-mobile-wellness-application.dev-informatics.com'; // e.g. http://www.example.com
+Drupal.settings.anon_initial_page = 'app_home';
+Drupal.settings.auth_initial_page = 'app_eight_demensions';

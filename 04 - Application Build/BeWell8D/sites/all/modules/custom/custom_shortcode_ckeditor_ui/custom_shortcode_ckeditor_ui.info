@@ -1,0 +1,7 @@
+name = Custom Shortcode CKEditor UI
+description = "Integrate Custom UI for Shortcode Module in CKEditor Module"
+core = 7.x
+package = CUSTOM
+dependencies[] = shortcode
+dependencies[] = ckeditor
+

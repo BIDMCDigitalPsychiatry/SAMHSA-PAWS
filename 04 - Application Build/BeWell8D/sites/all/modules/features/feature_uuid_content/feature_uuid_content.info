@@ -1,0 +1,6 @@
+name = Feature - UUID Content
+description = Contains Any UUID Content that should be set in features.
+core = 7.x
+package = Site Features
+version = 7.x-1.0
+features[features_api][] = api:2

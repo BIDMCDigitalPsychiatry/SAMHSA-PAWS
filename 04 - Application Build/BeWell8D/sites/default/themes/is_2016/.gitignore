@@ -1,0 +1,8 @@
+# Ignore
+node_modules
+gulp-config.json
+/files
+/fonts
+/css
+/images
+/js

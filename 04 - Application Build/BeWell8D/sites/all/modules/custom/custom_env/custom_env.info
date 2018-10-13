@@ -1,0 +1,5 @@
+name = Custom Environment
+description = A module to set our development and production environments.
+package = CUSTOM
+core = 7.x
+dependencies[] = environment

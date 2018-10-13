@@ -1,0 +1,22 @@
+<?php
+/**
+ * Implements hook_install().
+ */
+function custom_js_install() {
+	//Set this modules weight
+	db_query("UPDATE {system} SET weight = 100 WHERE name = 'custom_js'");
+}
+
+
+/**
+ * Implements hook_uninstall().
+ */
+function custom_js_uninstall() {
+}
+
+/**
+ * Implements hook_schema().
+ */
+function custom_js_schema() {
+
+}
